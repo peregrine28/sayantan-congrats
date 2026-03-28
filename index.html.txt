@@ -1,0 +1,151 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Congratulations Sayantan 🎉</title>
+
+<style>
+    * {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+        font-family: 'Arial', sans-serif;
+    }
+
+    body {
+        scroll-behavior: smooth;
+        overflow-x: hidden;
+    }
+
+    section {
+        height: 100vh;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        text-align: center;
+        padding: 20px;
+    }
+
+    .screen1 {
+        background: linear-gradient(135deg, #1f1c2c, #928dab);
+        color: white;
+    }
+
+    .screen2 {
+        background: linear-gradient(135deg, #0f2027, #203a43, #2c5364);
+        color: white;
+    }
+
+    .screen3 {
+        background: linear-gradient(135deg, #141e30, #243b55);
+        color: white;
+    }
+
+    .content {
+        max-width: 700px;
+        opacity: 0;
+        transform: translateY(30px);
+        transition: all 1s ease;
+    }
+
+    .content.show {
+        opacity: 1;
+        transform: translateY(0);
+    }
+
+    h1 {
+        font-size: 2.5rem;
+        margin-bottom: 20px;
+    }
+
+    p {
+        font-size: 1.2rem;
+        line-height: 1.6;
+    }
+
+    .final {
+        font-size: 2.8rem;
+        font-weight: bold;
+        color: #ffd700;
+    }
+
+    .tap-note {
+        position: fixed;
+        bottom: 20px;
+        width: 100%;
+        text-align: center;
+        font-size: 0.9rem;
+        color: #ccc;
+    }
+</style>
+</head>
+
+<body>
+
+<!-- Background Music -->
+<audio id="bgMusic" loop>
+    <source src="https://cdn.pixabay.com/audio/2023/03/27/audio_5c2e6cfa1c.mp3" type="audio/mp3">
+</audio>
+
+<div class="tap-note">Tap anywhere to start the experience 🎵</div>
+
+<section class="screen1">
+    <div class="content">
+        <h1>Not everything is visible…</h1>
+        <p>But some journeys speak for themselves.</p>
+    </div>
+</section>
+
+<section class="screen2">
+    <div class="content">
+        <p>
+            Over the last few years,<br>
+            you showed up — every single day.<br><br>
+
+            Owned things end to end.<br>
+            Took responsibility when it wasn’t easy.<br><br>
+
+            And yeah…<br>
+            all those brutal declines —<br>
+            no hangouts, no cricket, no random outings —<br><br>
+
+            They meant something.
+        </p>
+    </div>
+</section>
+
+<section class="screen3">
+    <div class="content">
+        <p>It all added up.<br><br>And today… it paid off.</p>
+        <h1 class="final">Congratulations, Sayantan 🎉</h1>
+        <p>Proud of you.</p>
+    </div>
+</section>
+
+<script>
+    const contents = document.querySelectorAll('.content');
+
+    function revealOnScroll() {
+        contents.forEach(content => {
+            const rect = content.getBoundingClientRect();
+            if (rect.top < window.innerHeight - 100) {
+                content.classList.add('show');
+            }
+        });
+    }
+
+    window.addEventListener('scroll', revealOnScroll);
+    window.addEventListener('load', revealOnScroll);
+
+    // Music play on first tap
+    const music = document.getElementById("bgMusic");
+    document.body.addEventListener("click", () => {
+        music.volume = 0.4;
+	music.play();
+        document.querySelector(".tap-note").style.display = "none";
+    }, { once: true });
+</script>
+
+</body>
+</html>
