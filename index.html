@@ -5,90 +5,110 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Congratulations Sayantan 🎉</title>
 
+<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;600;800&display=swap" rel="stylesheet">
+
 <style>
-    * {
-        margin: 0;
-        padding: 0;
-        box-sizing: border-box;
-        font-family: 'Arial', sans-serif;
-    }
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    font-family: 'Poppins', sans-serif;
+}
 
-    body {
-        scroll-behavior: smooth;
-        overflow-x: hidden;
-    }
+html {
+    scroll-snap-type: y mandatory;
+}
 
-    section {
-        height: 100vh;
-        display: flex;
-        justify-content: center;
-        align-items: center;
-        text-align: center;
-        padding: 20px;
-    }
+section {
+    height: 100vh;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    text-align: center;
+    padding: 20px;
+    scroll-snap-align: start;
+    position: relative;
+    color: white;
+}
 
-    .screen1 {
-        background: linear-gradient(135deg, #1f1c2c, #928dab);
-        color: white;
-    }
+/* Smooth gradient flow */
+.screen1 { background: linear-gradient(180deg, #1f1c2c, #4b6cb7); }
+.screen2 { background: linear-gradient(180deg, #4b6cb7, #182848); }
+.screen3 { background: linear-gradient(180deg, #182848, #000000); }
 
-    .screen2 {
-        background: linear-gradient(135deg, #0f2027, #203a43, #2c5364);
-        color: white;
-    }
+section::before {
+    content: "";
+    position: absolute;
+    inset: 0;
+    background: radial-gradient(circle, rgba(255,255,255,0.05), transparent);
+}
 
-    .screen3 {
-        background: linear-gradient(135deg, #141e30, #243b55);
-        color: white;
-    }
+.content {
+    max-width: 750px;
+    opacity: 0;
+    transform: translateY(60px) scale(0.97);
+    transition: all 1s ease;
+}
 
-    .content {
-        max-width: 700px;
-        opacity: 0;
-        transform: translateY(30px);
-        transition: all 1s ease;
-    }
+.content.show {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+}
 
-    .content.show {
-        opacity: 1;
-        transform: translateY(0);
-    }
+h1 {
+    font-size: 2.6rem;
+    margin-bottom: 20px;
+}
 
-    h1 {
-        font-size: 2.5rem;
-        margin-bottom: 20px;
-    }
+p {
+    font-size: 1.2rem;
+    line-height: 1.7;
+}
 
-    p {
-        font-size: 1.2rem;
-        line-height: 1.6;
-    }
+.final {
+    font-size: 2.8rem;
+    font-weight: 800;
+    color: #ffd700;
+    text-shadow: 0 0 20px rgba(255,215,0,0.7);
+}
 
-    .final {
-        font-size: 2.8rem;
-        font-weight: bold;
-        color: #ffd700;
-    }
+.bengali {
+    margin-top: 15px;
+    font-size: 1.2rem;
+    opacity: 0.85;
+}
 
-    .tap-note {
-        position: fixed;
-        bottom: 20px;
-        width: 100%;
-        text-align: center;
-        font-size: 0.9rem;
-        color: #ccc;
-    }
+#startOverlay {
+    position: fixed;
+    inset: 0;
+    background: black;
+    color: white;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    font-size: 1.3rem;
+    z-index: 10;
+    text-align: center;
+    cursor: pointer;
+}
+
+canvas {
+    position: fixed;
+    inset: 0;
+    pointer-events: none;
+}
 </style>
 </head>
 
 <body>
 
-<!-- Background Music -->
+<div id="startOverlay">Tap to begin the experience 🎵</div>
+
 <audio id="bgMusic" loop>
-    <source src="https://cdn.pixabay.com/audio/2023/03/27/audio_5c2e6cfa1c.mp3" type="audio/mp3">
+    <source src="https://cdn.pixabay.com/audio/2022/03/15/audio_115b9b1a8c.mp3" type="audio/mp3">
 </audio>
 
-<div class="tap-note">Tap anywhere to start the experience 🎵</div>
+<canvas id="confetti"></canvas>
 
 <section class="screen1">
     <div class="content">
@@ -103,7 +123,9 @@
             Over the last few years,<br>
             you showed up — every single day.<br><br>
 
-            Owned things end to end.<br>
+            Owned things end to end  
+            <br><i>(even though you were keen on using my dialog 😄)</i><br><br>
+
             Took responsibility when it wasn’t easy.<br><br>
 
             And yeah…<br>
@@ -115,45 +137,115 @@
     </div>
 </section>
 
-<section class="screen3">
+<section class="screen3" id="finalScreen">
     <div class="content">
-        <p>It all added up.<br><br>And today… it paid off.</p>
-        <h1 class="final">Congratulations, Sayantan 🎉</h1>
-        <p>Proud of you.</p>
+        <p>
+            It all added up.<br><br>
+            And today… it paid off.<br><br>
+            This one feels bigger than India’s World Cup win this year 😄
+        </p>
+
+        <h1 class="final">
+            Congratulations on your promotion, Sayantan! 🎉
+        </h1>
+
+        <div class="bengali">
+            দারুণ কাজ করেছিস! গর্ব হচ্ছে তোকে নিয়ে 🇧🇩
+        </div>
     </div>
 </section>
 
 <script>
-    const contents = document.querySelectorAll('.content');
-    const music = document.getElementById("bgMusic");
-    let musicStarted = false;
+// Scroll animation
+const contents = document.querySelectorAll('.content');
 
-    function revealOnScroll() {
-        contents.forEach(content => {
-            const rect = content.getBoundingClientRect();
-            if (rect.top < window.innerHeight - 100) {
-                content.classList.add('show');
-            }
+function revealOnScroll() {
+    contents.forEach(content => {
+        const rect = content.getBoundingClientRect();
+        if (rect.top < window.innerHeight - 100) {
+            content.classList.add('show');
+        }
+    });
+}
+
+window.addEventListener('scroll', revealOnScroll);
+window.addEventListener('load', revealOnScroll);
+
+// Music start
+const overlay = document.getElementById("startOverlay");
+const music = document.getElementById("bgMusic");
+
+overlay.addEventListener("click", () => {
+    music.volume = 0.3;
+    music.play();
+    overlay.style.display = "none";
+});
+
+// Confetti setup
+const canvas = document.getElementById("confetti");
+const ctx = canvas.getContext("2d");
+canvas.width = window.innerWidth;
+canvas.height = window.innerHeight;
+
+let confetti = [];
+
+function createConfetti() {
+    for (let i = 0; i < 150; i++) {
+        confetti.push({
+            x: Math.random() * canvas.width,
+            y: Math.random() * canvas.height - canvas.height,
+            r: Math.random() * 6 + 2,
+            d: Math.random() * 5 + 1
         });
     }
+}
 
-    function startMusic() {
-        if (!musicStarted) {
-            music.volume = 0.4;
-            music.play().catch(() => {});
-            musicStarted = true;
-            document.querySelector(".tap-note").style.display = "none";
-        }
+function drawConfetti() {
+    ctx.clearRect(0, 0, canvas.width, canvas.height);
+    confetti.forEach(c => {
+        ctx.beginPath();
+        ctx.arc(c.x, c.y, c.r, 0, Math.PI * 2);
+        ctx.fillStyle = "hsl(" + Math.random() * 360 + ", 100%, 50%)";
+        ctx.fill();
+    });
+    updateConfetti();
+}
+
+function updateConfetti() {
+    confetti.forEach(c => {
+        c.y += c.d;
+        if (c.y > canvas.height) c.y = -10;
+    });
+}
+
+function startConfetti() {
+    createConfetti();
+    setInterval(drawConfetti, 30);
+
+    if (navigator.vibrate) {
+        navigator.vibrate([200, 100, 200]);
     }
+}
 
-    // Start music on ANY interaction
-    document.addEventListener("click", startMusic);
-    document.addEventListener("scroll", startMusic);
-    document.addEventListener("touchstart", startMusic);
+// Final trigger
+let triggered = false;
 
-    window.addEventListener('scroll', revealOnScroll);
-    window.addEventListener('load', revealOnScroll);
+window.addEventListener("scroll", () => {
+    const final = document.getElementById("finalScreen");
+    const rect = final.getBoundingClientRect();
+
+    if (rect.top < window.innerHeight - 100 && !triggered) {
+        triggered = true;
+
+        try {
+            music.currentTime = 25;
+            music.volume = 1;
+        } catch(e) {}
+
+        startConfetti();
+    }
+});
 </script>
-	
+
 </body>
 </html>
