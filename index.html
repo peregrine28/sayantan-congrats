@@ -125,6 +125,8 @@
 
 <script>
     const contents = document.querySelectorAll('.content');
+    const music = document.getElementById("bgMusic");
+    let musicStarted = false;
 
     function revealOnScroll() {
         contents.forEach(content => {
@@ -135,17 +137,23 @@
         });
     }
 
+    function startMusic() {
+        if (!musicStarted) {
+            music.volume = 0.4;
+            music.play().catch(() => {});
+            musicStarted = true;
+            document.querySelector(".tap-note").style.display = "none";
+        }
+    }
+
+    // Start music on ANY interaction
+    document.addEventListener("click", startMusic);
+    document.addEventListener("scroll", startMusic);
+    document.addEventListener("touchstart", startMusic);
+
     window.addEventListener('scroll', revealOnScroll);
     window.addEventListener('load', revealOnScroll);
-
-    // Music play on first tap
-    const music = document.getElementById("bgMusic");
-    document.body.addEventListener("click", () => {
-        music.volume = 0.4;
-	music.play();
-        document.querySelector(".tap-note").style.display = "none";
-    }, { once: true });
 </script>
-
+	
 </body>
 </html>
